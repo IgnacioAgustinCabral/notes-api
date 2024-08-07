@@ -21,7 +21,7 @@ func Init() {
 		log.Fatalf("DATABASE_URL is required")
 	}
 
-	_, err = pgx.Connect(context.Background(), connString)
+	Conn, err = pgx.Connect(context.Background(), connString)
 	if err != nil {
 		log.Fatalf("Unable to connect to database: %v\n", err)
 	}

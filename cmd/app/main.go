@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/IgnacioAgustinCabral/notes-api/pkg/db"
+	"github.com/IgnacioAgustinCabral/notes-api/pkg/handlers"
 	"net/http"
 )
 
@@ -12,7 +13,9 @@ func main() {
 
 	mux := http.NewServeMux()
 
-	err := http.ListenAndServe(":8080", mux)
+	mux.HandleFunc("POST /register", handlers.Register)
+
+	err := http.ListenAndServe(":9090", mux)
 	if err != nil {
 		fmt.Println(err.Error())
 	}
