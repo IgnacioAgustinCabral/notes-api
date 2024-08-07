@@ -26,17 +26,17 @@ func Register(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var id int
-
-	err = db.Conn.QueryRow(context.Background(),
-		`INSERT INTO "user".user (username, email, password) VALUES ($1, $2, $3) RETURNING id`,
+	_, err = db.Conn.Exec(context.Background(),
+		`INSERT INTO "user".user (username, email, password) VALUES ($1, $2, $3)`,
 		request.Username,
 		request.Email,
 		string(hashedPassword),
-	).Scan(&id)
-
+	)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		response := map[string]string{"msg": "Error while creating user, username or email already exists"}
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(response)
 		return
 	}
 	w.Header().Set("Content-Type", "application/json")
