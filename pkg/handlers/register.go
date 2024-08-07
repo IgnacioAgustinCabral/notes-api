@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"github.com/IgnacioAgustinCabral/notes-api/pkg/db"
 	"github.com/IgnacioAgustinCabral/notes-api/pkg/payloads"
+	"golang.org/x/crypto/bcrypt"
 	"net/http"
 )
 
@@ -18,13 +19,20 @@ func Register(w http.ResponseWriter, r *http.Request) {
 
 	defer r.Body.Close()
 
+	var hashedPassword []byte
+	hashedPassword, err = bcrypt.GenerateFromPassword([]byte(request.Password), bcrypt.DefaultCost)
+	if err != nil {
+		http.Error(w, "Failed to hash password", http.StatusInternalServerError)
+		return
+	}
+
 	var id int
 
 	err = db.Conn.QueryRow(context.Background(),
 		`INSERT INTO "user".user (username, email, password) VALUES ($1, $2, $3) RETURNING id`,
 		request.Username,
 		request.Email,
-		request.Password,
+		string(hashedPassword),
 	).Scan(&id)
 
 	if err != nil {
