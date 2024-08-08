@@ -14,6 +14,7 @@ func main() {
 	mux := http.NewServeMux()
 
 	mux.HandleFunc("POST /register", handlers.Register)
+	mux.HandleFunc("POST /login", handlers.Login)
 
 	err := http.ListenAndServe(":9090", mux)
 	if err != nil {
