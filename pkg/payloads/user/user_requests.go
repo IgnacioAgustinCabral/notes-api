@@ -1,4 +1,4 @@
-package payloads
+package user
 
 type RegisterRequest struct {
 	Username string `json:"username"`

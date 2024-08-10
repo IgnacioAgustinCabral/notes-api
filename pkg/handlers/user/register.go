@@ -1,16 +1,16 @@
-package handlers
+package user
 
 import (
 	"context"
 	"encoding/json"
 	"github.com/IgnacioAgustinCabral/notes-api/pkg/db"
-	"github.com/IgnacioAgustinCabral/notes-api/pkg/payloads"
+	"github.com/IgnacioAgustinCabral/notes-api/pkg/payloads/user"
 	"golang.org/x/crypto/bcrypt"
 	"net/http"
 )
 
 func Register(w http.ResponseWriter, r *http.Request) {
-	request := payloads.RegisterRequest{}
+	request := user.RegisterRequest{}
 	err := json.NewDecoder(r.Body).Decode(&request)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
@@ -39,6 +39,7 @@ func Register(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(response)
 		return
 	}
+
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
 
